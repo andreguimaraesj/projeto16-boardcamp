@@ -1,4 +1,9 @@
+import dayjs from "dayjs";
+import advancedFormat from "dayjs/plugin/advancedFormat.js";
 import { db } from "../database/database.connection.js";
+
+dayjs.extend(advancedFormat);
+// dayjs(birthday).format("x");
 
 async function getRentals(req, res) {
   try {
