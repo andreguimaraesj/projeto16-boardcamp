@@ -1,4 +1,3 @@
-import bcrypt from "bcrypt";
 import { db } from "../database/database.connection.js";
 
 async function getGames(req, res) {
