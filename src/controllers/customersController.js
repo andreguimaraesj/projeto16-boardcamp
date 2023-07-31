@@ -39,7 +39,7 @@ async function postCustomers(req, res) {
     return res.status(409).send("CPF already registered");
 
   await db.query(
-    `INSERT INTO customers ("name", "phone", "cpf", "birthday" ) VALUES ($1, $2, $3, $4)`,
+    `INSERT INTO customers ("name", "phone", "cpf", "birthday") VALUES ($1, $2, $3, $4)`,
     [name, phone, cpf, birthday]
   );
   res.sendStatus(201);
@@ -54,7 +54,7 @@ async function putCustomers(req, res) {
   if (customer.rows.length > 0 && customer.rows[0].id !== Number(id))
     return res.status(409).send("CPF already registered");
   await db.query(
-    `UPDATE customers SET ("name", "phone", "cpf", "birthday") VALUES ($1, $2, $3, $4) WHERE id = $5`,
+    `UPDATE customers SET "name"= $1, "phone"= $2, "cpf"= $3, "birthday"= $4 WHERE id = $5`,
     [name, phone, cpf, birthday, id]
   );
   res.sendStatus(200);
