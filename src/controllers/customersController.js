@@ -3,11 +3,10 @@ import { db } from "../database/database.connection.js";
 
 async function getCustomers(req, res) {
   try {
-    const customers = await db.query("SELECT * FROM customers");
-    customers.rows.forEach(
-      (customer) =>
-        (customer.birthday = dayjs(customer.birthday).format("YYYY-MM-DD"))
+    const customers = await db.query(
+      "SELECT *, TO_CHAR(birthday, 'YYYY-MM-DD') AS birthday FROM customers;"
     );
+
     res.send(customers.rows);
   } catch (err) {
     res.status(500).send(err.message);
@@ -17,13 +16,13 @@ async function getCustomers(req, res) {
 async function getCustomersByID(req, res) {
   const { id } = req.params;
   try {
-    const customer = await db.query(`SELECT * FROM customers WHERE id = $1;`, [
-      id,
-    ]);
-    if (customer.rows.length === 0) return res.sendStatus(404);
-    customer.rows[0].birthday = dayjs(customer.rows[0].birthday).format(
-      "YYYY-MM-DD"
+    const customer = await db.query(
+      `SELECT *, TO_CHAR(birthday, 'YYYY-MM-DD') AS birthday 
+      FROM customers WHERE id = $1;`,
+      [id]
     );
+    if (customer.rows.length === 0) return res.sendStatus(404);
+
     res.send(customer.rows[0]);
   } catch (err) {
     res.status(500).send(err.message);
@@ -39,7 +38,7 @@ async function postCustomers(req, res) {
     return res.status(409).send("CPF already registered");
 
   await db.query(
-    `INSERT INTO customers ("name", "phone", "cpf", "birthday") VALUES ($1, $2, $3, $4)`,
+    `INSERT INTO customers ("name", "phone", "cpf", "birthday") VALUES ($1, $2, $3, $4);`,
     [name, phone, cpf, birthday]
   );
   res.sendStatus(201);
@@ -54,7 +53,7 @@ async function putCustomers(req, res) {
   if (customer.rows.length > 0 && customer.rows[0].id !== Number(id))
     return res.status(409).send("CPF already registered");
   await db.query(
-    `UPDATE customers SET "name"= $1, "phone"= $2, "cpf"= $3, "birthday"= $4 WHERE id = $5`,
+    `UPDATE customers SET "name"= $1, "phone"= $2, "cpf"= $3, "birthday"= $4 WHERE id = $5;`,
     [name, phone, cpf, birthday, id]
   );
   res.sendStatus(200);
