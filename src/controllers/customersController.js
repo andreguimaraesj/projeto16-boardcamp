@@ -1,30 +1,10 @@
+import dayjs from "dayjs";
 import { db } from "../database/database.connection.js";
 
 async function getCustomers(req, res) {
-  const { cpf, offset, limit, order, desc } = req.query;
-
-  let sqlQuery = ` `;
-  const sqlQueryParams = [];
-
-  if (cpf) {
-    sqlQueryParams.push(cpf + "%");
-    sqlQuery += `WHERE cpf LIKE $${sqlQueryParams.length} `;
-  }
-
-  if (offset) {
-    sqlQueryParams.push(offset);
-    sqlQuery += `OFFSET $${sqlQueryParams.length} `;
-  }
-
-  if (limit) {
-    sqlQueryParams.push(limit);
-    sqlQuery += `LIMIT $${sqlQueryParams.length} `;
-  }
-
   try {
     const customers = await db.query(
-      `SELECT *, TO_CHAR(birthday, 'YYYY-MM-DD') AS birthday FROM customers ${sqlQuery};`,
-      sqlQueryParams
+      "SELECT *, TO_CHAR(birthday, 'YYYY-MM-DD') AS birthday FROM customers;"
     );
 
     res.send(customers.rows);
