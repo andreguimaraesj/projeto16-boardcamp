@@ -4,7 +4,7 @@ import validateSchema from "../middlewares/validateSchema.js";
 
 export const gamesRouter = Router();
 
-gamesRouter.get("/game", getGames);
-gamesRouter.post("/post", postGames);
+gamesRouter.get("/games", getGames);
+gamesRouter.post("/games", postGames);
 
 export default gamesRouter;
